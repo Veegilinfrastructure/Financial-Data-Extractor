@@ -6,6 +6,9 @@ import re
 from openpyxl import load_workbook
 import os
 
+import spacy
+import os
+
 # Ensure spaCy model is installed
 try:
     nlp = spacy.load("en_core_web_sm")
