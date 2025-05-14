@@ -2,5 +2,6 @@ streamlit
 pymupdf
 pandas
 openpyxl
+tourch==2.0
 transformers
-tourch
+
