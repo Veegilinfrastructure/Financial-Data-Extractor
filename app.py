@@ -5,6 +5,16 @@ import re
 from openpyxl import load_workbook
 from transformers import pipeline
 
+import torch
+torch.set_default_dtype(torch.float32)  # Ensures compatibility
+torch.device("cpu")  # Explicitly sets PyTorch to CPU
+
+import asyncio
+try:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+except:
+    pass
+
 # Load FinBERT model for financial text understanding
 finbert = pipeline("ner", model="ProsusAI/finbert")
 
