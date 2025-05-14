@@ -8,7 +8,8 @@ import torch
 import asyncio
 
 # Ensure compatibility with Streamlit's asyncio management
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+#asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+asyncio.set_event_loop(asyncio.new_event_loop())
 
 # Force PyTorch to use CPU explicitly
 device = torch.device("cpu")
