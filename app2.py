@@ -4,9 +4,14 @@ import pandas as pd
 import spacy
 import re
 from openpyxl import load_workbook
+import os
 
-# Load NLP model
-nlp = spacy.load("en_core_web_sm")
+# Ensure spaCy model is installed
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    os.system("python -m spacy download en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 
 def extract_text_from_pdf(uploaded_file):
     """Extract text from an uploaded PDF document."""
