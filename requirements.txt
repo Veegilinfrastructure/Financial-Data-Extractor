@@ -3,6 +3,6 @@ pymupdf
 pandas
 openpyxl
 transformers
-torch==2.0
+torch
 torchvision
 torchaudio
