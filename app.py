@@ -4,23 +4,25 @@ import pandas as pd
 import re
 from openpyxl import load_workbook
 from transformers import pipeline
-
 import torch
-torch.set_default_dtype(torch.float32)  # Ensures compatibility
-torch.device("cpu")  # Explicitly sets PyTorch to CPU
-
 import asyncio
+
+# Prevent event loop conflicts in Streamlit Cloud
 try:
     asyncio.set_event_loop(asyncio.new_event_loop())
-except:
+except RuntimeError:
     pass
+
+# Force PyTorch to use CPU
+torch.set_default_dtype(torch.float32)
+device = torch.device("cpu")
 
 # Load FinBERT model for financial text understanding
 finbert = pipeline("ner", model="ProsusAI/finbert")
 
-def extract_text_from_pdf(pdf_file):
-    """Extract text from a PDF document."""
-    doc = fitz.open(pdf_file)
+def extract_text_from_pdf(uploaded_file):
+    """Extract text from an uploaded PDF document."""
+    doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
     text = ""
     for page in doc:
         text += page.get_text()
@@ -45,7 +47,6 @@ def extract_financial_data(text):
         "Adjusted EBITDA": "",
     }
 
-    # Extract key financial terms using FinBERT
     for ent in entities:
         if "ORG" in ent["entity"] and not data["Company Name"]:
             data["Company Name"] = ent["word"]
@@ -54,7 +55,6 @@ def extract_financial_data(text):
         elif "DATE" in ent["entity"] and not data["Date"]:
             data["Date"] = ent["word"]
 
-    # Define regex patterns for financial figures
     financial_patterns = {
         "Revenue": r"Revenue[\s:]*\$?([\d,.]+)",
         "EBITDA": r"EBITDA[\s:]*\$?([\d,.]+)",
@@ -66,7 +66,6 @@ def extract_financial_data(text):
         "Adjusted EBITDA": r"Adjusted EBITDA[\s:]*\$?([\d,.]+)"
     }
 
-    # Extract financial values using regex
     for key, pattern in financial_patterns.items():
         match = re.search(pattern, text)
         if match:
@@ -82,7 +81,7 @@ def save_to_excel(data):
     return filename
 
 # Streamlit UI
-st.title("Veegil Financial Data Extraction from PDF")
+st.title("Financial Data Extraction from PDF")
 
 uploaded_file = st.file_uploader("Upload a PDF document", type=["pdf"])
 
