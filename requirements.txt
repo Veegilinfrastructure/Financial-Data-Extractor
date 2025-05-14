@@ -2,5 +2,5 @@ streamlit
 pymupdf
 pandas
 openpyxl
-spacy==3.7.2
-
+transformers
+tourch
