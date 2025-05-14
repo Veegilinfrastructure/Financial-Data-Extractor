@@ -2,6 +2,5 @@ streamlit
 pymupdf
 pandas
 openpyxl
-tourch
 transformers
-
+torch
